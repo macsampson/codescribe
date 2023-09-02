@@ -1,7 +1,28 @@
 @import "@assets/style/theme.scss";
 
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #23272d;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #505050;
+  border-radius: 5px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #414141;
+}
+
 // CSS that can pollute global styles. Use it with caution.
-// If you use ShodowRoot for style pollution, this style will not be applied inside the content script.
+// If you use ShadowRoot for style pollution, this style will not be applied inside the content script.
 .content-view-style-may-be-not-working {
   font-size: 30px;
 }
