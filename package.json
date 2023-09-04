@@ -23,11 +23,19 @@
     "@headlessui/react": "^1.7.17",
     "@heroicons/react": "^2.0.18",
     "construct-style-sheets-polyfill": "^3.1.0",
+    "hast-util-to-jsx-runtime": "^2.1.1",
     "marked": "^7.0.5",
     "octokit": "^3.1.0",
     "openai": "^4.3.1",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "react-markdown": "^8.0.7",
+    "rehype-highlight": "^6.0.0",
+    "rehype-react": "^8.0.0",
+    "remark-gfm": "^3.0.1",
+    "remark-parse": "^10.0.2",
+    "remark-rehype": "^10.1.0",
+    "unified": "^11.0.2"
   },
   "devDependencies": {
     "@rollup/plugin-typescript": "^8.5.0",
@@ -41,6 +49,7 @@
     "@types/node": "18.15.11",
     "@types/react": "18.0.21",
     "@types/react-dom": "18.2.4",
+    "@types/unist": "^3.0.0",
     "@types/ws": "^8.5.4",
     "@typescript-eslint/eslint-plugin": "5.56.0",
     "@typescript-eslint/parser": "5.38.1",
