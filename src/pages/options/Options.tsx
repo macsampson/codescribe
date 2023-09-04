@@ -2,6 +2,7 @@ import React from "react";
 import "@pages/options/Options.css";
 import { useState, useEffect } from "react";
 import { ChevronLeftIcon } from "@heroicons/react/24/outline";
+import Button from "@src/pages/content/components/Button";
 
 const Options: React.FC<{ onGoBack: () => void }> = ({ onGoBack }) => {
   const [apiKey, setApiKey] = useState("");
@@ -16,41 +17,35 @@ const Options: React.FC<{ onGoBack: () => void }> = ({ onGoBack }) => {
     chrome.storage.local.set({ openaiApiKey: apiKey });
   };
   return (
-    <div className="options-page">
-      <button
-        className="bg-gray-300 hover:bg-gray-400 text-gray-800 py-2 px-4 rounded inline-flex items-center"
-        onClick={onGoBack}
-      >
-        <ChevronLeftIcon className="h-5 w-5 mr-2" />
-        Back to CodeScribe
-      </button>
-      <form onSubmit={handleSubmit}>
-        <label
-          htmlFor="apiKey"
-          className="block text-gray-200 font-bold md:text-right mb-1 md:mb-0 pr-4"
-        >
-          API Key:
-          <input
-            type="password"
-            name="apiKey"
-            className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
-            id="apiKey"
-            placeholder="******************"
-            value={apiKey}
-            onChange={(e) => {
-              setApiKey(e.target.value);
-              chrome.storage.local.set({ openaiApiKey: e.target.value });
-            }}
-          />
-        </label>
-        <button
-          type="submit"
-          className="bg-gray-300 hover:bg-gray-400 text-gray-800 py-2 px-4 rounded inline-flex items-center"
-        >
-          Submit
-        </button>
+    <div className="options-page flex flex-col p-4">
+      <div className="flex self-start">
+        <Button label="Back" icon={<ChevronLeftIcon />} onClick={onGoBack} />
+      </div>
+
+      <form onSubmit={handleSubmit} className="flex flex-col mt-4">
+        <div className="flex flex-row">
+          <label
+            htmlFor="apiKey"
+            className="block text-gray-200 md:text-right md:mb-0 pr-4"
+          >
+            API Key:
+            <input
+              type="password"
+              name="apiKey"
+              className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-sky-500 flex-grow"
+              id="apiKey"
+              placeholder="******************"
+              value={apiKey}
+              onChange={(e) => {
+                setApiKey(e.target.value);
+                chrome.storage.local.set({ openaiApiKey: e.target.value });
+              }}
+            />
+          </label>
+          <Button label="Save" onClick={handleSubmit} />
+        </div>
       </form>
-      <div id="apiKeyHelp" className="text-gray-200">
+      <div id="apiKeyHelp" className="text-gray-200 mt-2">
         Go to your{" "}
         <a
           href="https://beta.openai.com/account/api-keys"
