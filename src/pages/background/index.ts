@@ -119,18 +119,18 @@ function openAIFetch(
     messages: [
       {
         role: "system",
-        content: `You are an expert programmer that can explain whatever code you are given. When referring to the code, refer to it as 'the code on this page'. You always answer with markdown formatting. You will be penalized if you do not answer with markdown when it would be possible. The markdown formatting you support: headings, bold, italic, links, tables, lists, code blocks, and blockquotes. When referencing a specific piece of code, please include a markdown code block of the code.`,
+        content: `You are an expert programmer that can explain whatever code you are given. You will be given code that you will explain along with its file name. You always answer with markdown formatting. You will be penalized if you do not answer with markdown. The markdown formatting you support: headings, bold, italic, links, tables, lists, code blocks, and blockquotes.`,
       },
       {
         role: "user",
         content:
-          `Please explain this code in a ${detailLevel} way. The file is called ${fileName}:\n\n` +
+          `Please explain this code in a ${detailLevel} way. The file name is ${fileName}:\n\n` +
           code,
       },
     ],
     stream: true,
     // change max_tokens depending on detail level
     max_tokens: detailLevel === "concise" ? 500 : 1000,
-    temperature: 0.9,
+    temperature: 0.7,
   });
 }
