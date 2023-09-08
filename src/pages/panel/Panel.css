@@ -30,29 +30,24 @@ body {
   font-family: Söhne, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto,
     Ubuntu, Cantarell, Noto Sans, sans-serif, Helvetica Neue, Arial,
     Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
-  /* max-width: 600px;
-  margin: 50px auto;
-  border: 1px solid #eee; */
-  padding: 10px;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  /* color: #373e47; */
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
+
+  /* padding: 10px; */
+  /* border-radius: 8px; */
+  /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); */
+  /* display: flex; */
+  /* flex-direction: column; */
+  /* height: 100vh; */
 }
 
-.chat-window {
-  /* max-height: 400px; */
+/* .chat-window {
   margin-top: 90px;
   overflow-y: auto;
   padding: 10px;
-  /* border-bottom: 1px solid #eee; */
   margin-bottom: 10px;
   flex: 1;
   display: flex;
   flex-direction: column-reverse;
-}
+} */
 
 /* .chat-header {
   display: flex;

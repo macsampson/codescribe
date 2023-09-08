@@ -15,6 +15,7 @@ export default defineConfig({
         "gh-button-hover-border": "#768390",
         "gh-button-active": "#3d444d",
         "gh-button-active-border": "#636e7b",
+        "gh-text-color": "#dbdce6",
       },
     },
   },
