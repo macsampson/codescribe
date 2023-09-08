@@ -119,18 +119,18 @@ function openAIFetch(
     messages: [
       {
         role: "system",
-        content: `You are an expert programmer that can explain whatever code you are given. You will be given code that you will explain along with its file name. You always answer with markdown formatting. You will be penalized if you do not answer with markdown. The markdown formatting you support: headings, bold, italic, links, tables, lists, code blocks, and blockquotes.`,
+        content: `You are an expert programming teacher. You will be given some code and you will explain what the code does. You will start with a high level summary and then break it down to the whatever detail level the user requests. You will respond with markdown. You will be penalized if you do not answer with markdown. The markdown formatting you support: headings, bold, italic, links, tables, lists, code blocks, and blockquotes. You will only respond with the explanation. You will not ask the user if they have any questions or prompt the user to repond in any way. Please use at least one multiline code block in your response when referencing code.`,
       },
       {
         role: "user",
         content:
-          `Please explain this code in a ${detailLevel} way. The file name is ${fileName}:\n\n` +
+          `Here is a file called ${fileName}. Please give a ${detailLevel} description of the code. \n\n` +
           code,
       },
     ],
     stream: true,
     // change max_tokens depending on detail level
-    max_tokens: detailLevel === "concise" ? 500 : 1000,
+    max_tokens: detailLevel === "brief" ? 750 : 1200,
     temperature: 0.7,
   });
 }
