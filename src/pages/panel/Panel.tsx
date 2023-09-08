@@ -99,7 +99,10 @@ const Panel: React.FC = () => {
             return;
           }
           // Add an empty chatgpt message to be populated in real-time
-          setMessages((prev) => [{ sender: "CodeScribe", text: "" }, ...prev]);
+          setMessages((prev) => [
+            { sender: "CodeScribe", text: "", model: model.value },
+            ...prev,
+          ]);
           const port = chrome.runtime.connect();
           port.postMessage({
             action: "fetchFromOpenAI",

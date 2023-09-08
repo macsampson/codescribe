@@ -12,7 +12,7 @@ import remarkRehype from "remark-rehype";
 import { unified } from "unified";
 import ReactMarkdown from "react-markdown";
 
-export const useMarkdownProcessor = (content: string) => {
+export const useMarkdownProcessor = (content: string, model: string) => {
   //   useEffect(() => {
   //     mermaid.initialize({ startOnLoad: false, theme: "forest" });
   //   }, []);
@@ -67,11 +67,13 @@ export const useMarkdownProcessor = (content: string) => {
           em: ({ children }: JSX.IntrinsicElements["em"]) => (
             <em>{children}</em>
           ),
-          code: CodeBlock,
+          code: (props) => <CodeBlock {...props} model={model} />,
           pre: ({ children }: JSX.IntrinsicElements["pre"]) => {
             return (
               <div className="...">
-                <pre className="...">{children}</pre>
+                <pre className="p-1 rounded font-bold bg-gray-900 mb-1">
+                  {children}
+                </pre>
               </div>
             );
           },
@@ -110,7 +112,11 @@ export const useMarkdownProcessor = (content: string) => {
 };
 
 // A more complex custom component for the `code` element.
-const CodeBlock = ({ children, className }: JSX.IntrinsicElements["code"]) => {
+const CodeBlock = ({
+  children,
+  className,
+  model,
+}: JSX.IntrinsicElements["code"] & { model: string }) => {
   // State to display the Mermaid diagram.
   const [showMermaidPreview, setShowMermaidPreview] = useState(false);
 
@@ -152,10 +158,25 @@ const CodeBlock = ({ children, className }: JSX.IntrinsicElements["code"]) => {
     );
   }
 
+  // write a functino that uses a switch statment to check the model name and return a js object with codeStyle
+  const codeStyle = (model: string) => {
+    switch (model) {
+      case "gpt-3.5-turbo":
+        return "selection:bg-green-300 selection:text-green-900 ";
+      case "gpt-4":
+        return "selection:bg-purple-300 selection:text-purple-900";
+
+      default:
+        return "bg-ada-code-color";
+    }
+  };
+
   // Handle an inline `code` tag.
   return (
-    <code className="bg-sky-200 text-sky-800 p-1 rounded font-bold">
+    <code className={`p-1 rounded font-bold bg-gray-900 ${codeStyle(model)}`}>
       {children}
     </code>
   );
 };
+
+export default useMarkdownProcessor;
