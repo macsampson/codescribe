@@ -4,13 +4,17 @@ import "@pages/popup/Popup.css";
 import useStorage from "@src/shared/hooks/useStorage";
 import exampleThemeStorage from "@src/shared/storages/exampleThemeStorage";
 import withSuspense from "@src/shared/hoc/withSuspense";
+import notGithub from "@assets/img/not-github.png";
 
 const Popup = () => {
   const theme = useStorage(exampleThemeStorage);
 
   return (
-    <div className="App">
-      <div>This extension only works on GitHub x_x</div>
+    <div className="App bg-white">
+      <img src={notGithub} alt="not-github" />
+      <h1 className="text-lg font-bold">
+        beeep booOop! this extension only works on GitHub x_x
+      </h1>
     </div>
   );
 };

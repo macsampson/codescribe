@@ -8,7 +8,7 @@ export const detailSelectLabel = "Response Detail";
 export const explainCodeButtonLabel = "Explain Code";
 
 export const detailOptions = [
-  { id: 1, label: "Concise", value: "concise", icon: <Bars2Icon /> },
+  { id: 1, label: "Brief", value: "brief", icon: <Bars2Icon /> },
   { id: 2, label: "Detailed", value: "detailed", icon: <Bars4Icon /> },
   // Add other detail options as needed
 ];
