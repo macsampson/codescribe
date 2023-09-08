@@ -12,7 +12,7 @@ function init() {
     throw new Error("Can not find #app-container");
   }
   const root = createRoot(appContainer);
-  root.render(<Options />);
+  root.render(<Options onGoBack={() => {}} />);
 }
 
 init();
