@@ -35,7 +35,7 @@
     "remark-gfm": "^3.0.1",
     "remark-parse": "^10.0.2",
     "remark-rehype": "^10.1.0",
-    "unified": "^11.0.2"
+    "unified": "^11.0.3"
   },
   "devDependencies": {
     "@rollup/plugin-typescript": "^8.5.0",
