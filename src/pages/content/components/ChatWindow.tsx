@@ -31,12 +31,14 @@ function ChatWindow({ messages }) {
       id="chat-window"
       className="overflow-y-auto p-2.5 flex flex-col-reverse flex-grow my-2"
     >
-      {messages.map((message, index) => (
+      {messages.map((message, index: React.Key) => (
         <Message
           key={index}
           sender={message.sender}
           text={message.text}
           model={message.model}
+          detail={message.detail}
+          url={message.url}
         />
       ))}
     </div>

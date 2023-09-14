@@ -1,12 +1,14 @@
-import useMarkdownProcessor from "@src/shared/hooks/useMarkdownProcessor";
+import useMarkdownProcessor from "@root/utils/useMarkdownProcessor";
 
 interface Props {
   sender: string;
   model: string;
+  detail: string;
   text: string;
+  url: string;
 }
 
-const Message = ({ sender, text, model }: Props) => {
+const Message = ({ sender, text, model, detail, url }: Props) => {
   const content = useMarkdownProcessor(text, model);
 
   const computeStyle = (model: string) => {
@@ -40,7 +42,18 @@ const Message = ({ sender, text, model }: Props) => {
   return (
     <li className={`flex flex-col min-w-0 gap-1`}>
       <p className={`font-sans text-xs font-medium mt-2 ${senderClass}`}>
-        {sender + `${model !== undefined ? ` (${model})` : ""}`}
+        {sender}
+        {model && ` (${model})`}
+        {url && (
+          <a
+            href={url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="ml-2 underline"
+          >
+            View Source
+          </a>
+        )}
       </p>
       <div className="items-center justify-center">
         <div className={`w-full rounded-md p-1 ${borderClass}`}>
