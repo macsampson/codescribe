@@ -39,20 +39,20 @@ const Message = ({ sender, text, model, detail, url }: Props) => {
 
   const { contentClass, senderClass, borderClass } = computeStyle(model);
 
+  const handleClick = () => {
+    // Send a message to the background script to navigate to the URL
+    chrome.runtime.sendMessage({ action: "navigateToURL", url: url });
+  };
+
   return (
     <li className={`flex flex-col min-w-0 gap-1`}>
       <p className={`font-sans text-xs font-medium mt-2 ${senderClass}`}>
         {sender}
         {model && ` (${model})`}
         {url && (
-          <a
-            href={url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="ml-2 underline"
-          >
+          <span onClick={handleClick} className="ml-2 underline cursor-pointer">
             View Source
-          </a>
+          </span>
         )}
       </p>
       <div className="items-center justify-center">

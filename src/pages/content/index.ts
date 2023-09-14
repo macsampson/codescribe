@@ -28,11 +28,13 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   try {
     if (request.action === "getCodeFromPage") {
       console.log("getCodeFromPage message received");
+
       const code = getCode();
       const fileName = getFileName();
       const message = {
         code: code,
         fileName: fileName,
+        url: request.url,
       };
       sendResponse(message);
     }

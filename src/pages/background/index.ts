@@ -1,4 +1,5 @@
 import reloadOnUpdate from "virtual:reload-on-update-in-background-script";
+import { githubCodeResponse } from "@root/src/types";
 
 reloadOnUpdate("pages/background");
 
@@ -65,16 +66,6 @@ chrome.tabs.onUpdated.addListener(async (tabId, info, tab) => {
   }
 });
 
-interface IRequest {
-  action: string;
-  message: githubCodeResponse;
-}
-
-interface githubCodeResponse {
-  code: string;
-  fileName: string;
-}
-
 const CACHE_KEY_PREFIX = "codeDescription_";
 
 async function sha256(content: string): Promise<string> {
@@ -89,8 +80,13 @@ async function sha256(content: string): Promise<string> {
 }
 
 // Utility to generate a unique cache key based on the code's content
-async function generateCacheKey(code: string): Promise<string> {
-  return CACHE_KEY_PREFIX + (await sha256(code));
+async function generateCacheKey(
+  code: string,
+  url: string,
+  detail: string,
+  model: string
+): Promise<string> {
+  return CACHE_KEY_PREFIX + (await sha256(code + url + detail + model));
 }
 
 chrome.runtime.onConnect.addListener((port) => {
@@ -99,7 +95,12 @@ chrome.runtime.onConnect.addListener((port) => {
       // const { message } = request;
       console.log("fetch request received in background");
 
-      const cacheKey = await generateCacheKey(request.message.code);
+      const cacheKey = await generateCacheKey(
+        request.message.code,
+        request.message.url,
+        request.detail,
+        request.model
+      );
 
       // Check cache before making API call
       chrome.storage.local.get([cacheKey], async (items) => {
@@ -153,6 +154,26 @@ chrome.runtime.onConnect.addListener((port) => {
     }
   });
 });
+
+// Listener to navigate to source code of description
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.action === "navigateToURL") {
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      const activeTab = tabs[0];
+      if (activeTab && activeTab.id) {
+        chrome.scripting.executeScript({
+          target: { tabId: activeTab.id },
+          func: navigateToURL,
+          args: [message.url],
+        });
+      }
+    });
+  }
+});
+
+function navigateToURL(url: string) {
+  window.location.href = url;
+}
 
 // function to call the OpenAI API and return a stream of explanations
 function openAIFetch(

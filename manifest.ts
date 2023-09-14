@@ -8,7 +8,7 @@ const manifest: chrome.runtime.ManifestV3 = {
   name: "CodeScribe for GitHub",
   version: packageJson.version,
   description: packageJson.description,
-  permissions: ["storage", "sidePanel", "activeTab", "tabs"],
+  permissions: ["storage", "sidePanel", "activeTab", "tabs", "scripting"],
   options_page: "src/pages/options/index.html",
   background: {
     service_worker: "src/pages/background/index.js",
@@ -46,6 +46,7 @@ const manifest: chrome.runtime.ManifestV3 = {
       matches: ["*://*/*"],
     },
   ],
+  host_permissions: ["https://github.com/*"],
 };
 
 export default manifest;

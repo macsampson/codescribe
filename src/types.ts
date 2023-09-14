@@ -1,6 +1,7 @@
 export interface githubCodeResponse {
   code: string;
   fileName: string;
+  url: string;
 }
 
 export interface Option {

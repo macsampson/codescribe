@@ -20,6 +20,8 @@ const Panel: React.FC = () => {
   // This state will determine which view is currently active
   const [isOptionsOpen, setIsOptionsOpen] = useState(false);
 
+  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+
   const handleStateChange = (
     model: ModelType,
     detailLevel: DetailLevelType
@@ -32,7 +34,7 @@ const Panel: React.FC = () => {
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
       chrome.tabs.sendMessage(
         tabs[0].id!,
-        { action: "getCodeFromPage" },
+        { action: "getCodeFromPage", url: tabs[0].url },
         function (response: githubCodeResponse) {
           if (chrome.runtime.lastError) {
             console.error("Error: ", chrome.runtime.lastError);
@@ -57,7 +59,7 @@ const Panel: React.FC = () => {
               sender: "CodeScribe",
               text: "",
               model: model.value,
-              url: tabs[0].url,
+              url: response.url,
               detail: detailLevel,
             },
             ...prev,
@@ -67,7 +69,7 @@ const Panel: React.FC = () => {
             action: "fetchFromOpenAI",
             message: response,
             model: model.value,
-            detailLevel: detailLevel.value,
+            detail: detailLevel.value,
           });
 
           port.onMessage.addListener((response) => {
@@ -113,6 +115,7 @@ const Panel: React.FC = () => {
             onClick={handleButtonClick}
             onStateChange={handleStateChange}
             onOpenOptions={() => setIsOptionsOpen(true)}
+            onOpenHistory={() => alert("History")}
           />
           <ChatWindow messages={messages} />
           {/* <ChatInput onSendMessage={handleSendMessage} /> */}
