@@ -75,29 +75,81 @@ interface githubCodeResponse {
   fileName: string;
 }
 
+const CACHE_KEY_PREFIX = "codeDescription_";
+
+async function sha256(content: string): Promise<string> {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(content);
+  const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  const hashHex = hashArray
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
+  return hashHex;
+}
+
+// Utility to generate a unique cache key based on the code's content
+async function generateCacheKey(code: string): Promise<string> {
+  return CACHE_KEY_PREFIX + (await sha256(code));
+}
+
 chrome.runtime.onConnect.addListener((port) => {
   port.onMessage.addListener(async (request) => {
     if (request.action === "fetchFromOpenAI") {
       // const { message } = request;
       console.log("fetch request received in background");
-      try {
-        const stream = await openAIFetch(
-          request.message,
-          request.model,
-          request.detailLevel
-        );
-        console.log(request);
-        for await (let data of stream) {
-          port.postMessage({ text: data.choices[0]?.delta?.content });
-        }
 
-        port.postMessage({ endOfData: true });
-      } catch (error) {
-        console.error("Error fetching from OpenAI: ", error);
-        port.postMessage({
-          error: "An error occurred while processing the request.",
-        });
-      }
+      const cacheKey = await generateCacheKey(request.message.code);
+
+      // Check cache before making API call
+      chrome.storage.local.get([cacheKey], async (items) => {
+        if (items[cacheKey]) {
+          console.log("cached description found");
+          const cachedDescription = items[cacheKey];
+
+          // Break the cached description into chunks
+          const chunks = cachedDescription.split(" "); // Splitting by words for simplicity
+
+          // Helper function to send each chunk with a delay
+          function sendChunk(index: number) {
+            if (index >= chunks.length) {
+              port.postMessage({ endOfData: true });
+              return;
+            }
+            port.postMessage({ text: chunks[index] + " " }); // Add a space after each word
+            setTimeout(() => sendChunk(index + 1), 100); // 100ms delay between chunks
+          }
+
+          // Start sending chunks
+          sendChunk(0);
+
+          return;
+        } else {
+          try {
+            const stream = await openAIFetch(
+              request.message,
+              request.model,
+              request.detailLevel
+            );
+            console.log(request);
+            let fullResponse = "";
+            for await (let data of stream) {
+              fullResponse += data.choices[0]?.delta?.content;
+              port.postMessage({ text: data.choices[0]?.delta?.content });
+            }
+
+            // Store the full description to the storage
+            chrome.storage.local.set({ [cacheKey]: fullResponse });
+
+            port.postMessage({ endOfData: true });
+          } catch (error) {
+            console.error("Error fetching from OpenAI: ", error);
+            port.postMessage({
+              error: "An error occurred while processing the request.",
+            });
+          }
+        }
+      });
     }
   });
 });
