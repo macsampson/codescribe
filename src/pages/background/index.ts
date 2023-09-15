@@ -106,23 +106,27 @@ chrome.runtime.onConnect.addListener((port) => {
       chrome.storage.local.get([cacheKey], async (items) => {
         if (items[cacheKey]) {
           console.log("cached description found");
-          const cachedDescription = items[cacheKey];
+          const cachedDescription = items[cacheKey].description;
 
-          // Break the cached description into chunks
-          const chunks = cachedDescription.split(" "); // Splitting by words for simplicity
+          // // Break the cached description into chunks
+          // const chunks = cachedDescription.split(" "); // Splitting by words for simplicity
 
-          // Helper function to send each chunk with a delay
-          function sendChunk(index: number) {
-            if (index >= chunks.length) {
-              port.postMessage({ endOfData: true });
-              return;
-            }
-            port.postMessage({ text: chunks[index] + " " }); // Add a space after each word
-            setTimeout(() => sendChunk(index + 1), 100); // 100ms delay between chunks
-          }
+          // // Helper function to send each chunk with a delay
+          // function sendChunk(index: number) {
+          //   if (index >= chunks.length) {
+          //     port.postMessage({ endOfData: true });
+          //     return;
+          //   }
+          //   port.postMessage({ text: chunks[index] + " " }); // Add a space after each word
+          //   setTimeout(() => sendChunk(index + 1), 50); // delay between chunks
+          // }
 
-          // Start sending chunks
-          sendChunk(0);
+          // // Start sending chunks
+          // sendChunk(0);
+
+          // Send the full description at once
+          port.postMessage({ text: cachedDescription });
+          port.postMessage({ endOfData: true });
 
           return;
         } else {
@@ -135,12 +139,23 @@ chrome.runtime.onConnect.addListener((port) => {
             console.log(request);
             let fullResponse = "";
             for await (let data of stream) {
-              fullResponse += data.choices[0]?.delta?.content;
-              port.postMessage({ text: data.choices[0]?.delta?.content });
+              const content = data.choices[0]?.delta?.content;
+              if (content) {
+                fullResponse += content;
+                port.postMessage({ text: content });
+              }
             }
 
             // Store the full description to the storage
-            chrome.storage.local.set({ [cacheKey]: fullResponse });
+            chrome.storage.local.set({
+              [cacheKey]: {
+                url: request.message.url,
+                fileName: request.message.fileName,
+                description: fullResponse,
+                model: request.model,
+                detail: request.detail,
+              },
+            });
 
             port.postMessage({ endOfData: true });
           } catch (error) {
