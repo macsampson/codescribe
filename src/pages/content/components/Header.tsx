@@ -83,7 +83,7 @@ const Header: React.FC<HeaderProps> = ({
 }) => (
   <div
     id="header"
-    className="flex flex-col flex-none justify-between min-w-450 p-4 bg-gh-med-gray text-white top-0 left-0 right-0 z-10 shadow-md"
+    className="flex flex-col flex-none justify-between min-w-450 p-4 bg-gh-light-gray text-white top-0 left-0 right-0 z-10 shadow-md"
   >
     <UpperHeader {...upperHeaderProps} />
     <div id="chat-header-controls" className="flex justify-between">

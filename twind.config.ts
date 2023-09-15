@@ -7,8 +7,9 @@ export default defineConfig({
   theme: {
     extend: {
       colors: {
-        "gh-med-gray": "#2d333b",
-        "gh-dark-gray": "#23272d",
+        "gh-light-gray": "#2d333b",
+        "gh-med-gray": "#23272d",
+        "gh-dark-gray": "#1c2128",
         "gh-button-border": "#cdd9e51a",
         "gh-button-color": "#373e47",
         "gh-button-hover": "#444c56",
