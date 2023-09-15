@@ -1,16 +1,27 @@
-import React from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 import { Menu, Listbox } from "@headlessui/react";
 import "@pages/panel/Panel.css";
 // import CodeExplain from "@pages/content/components/CodeExplainerOutput/codeExplainerOutput";
-import { useState, useEffect } from "react";
 // import * as marked from "marked";
 import Options from "@pages/options/Options";
+import History from "@pages/history/History";
 
 import ChatHeader from "@src/pages/content/components/ChatHeader";
 import ChatWindow from "@src/pages/content/components/ChatWindow";
 
 import { ModelType, DetailLevelType, githubCodeResponse } from "@src/types";
 import { modelOptions, detailOptions } from "@src/constants";
+
+const CodeScribeContext = createContext(null);
+
+export const useCodeScribeContext = () => useContext(CodeScribeContext);
+
+enum View {
+  CHAT,
+  OPTIONS,
+  HISTORY,
+  // ... other views as needed in the future
+}
 
 const Panel: React.FC = () => {
   const [messages, setMessages] = useState([]);
@@ -21,6 +32,16 @@ const Panel: React.FC = () => {
   const [isOptionsOpen, setIsOptionsOpen] = useState(false);
 
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+
+  const [currentView, setCurrentView] = useState<View>(View.CHAT);
+
+  const addMessage = (message) => {
+    setMessages((prevMessages) => [...prevMessages, message]);
+  };
+
+  const showMainView = () => {
+    setCurrentView(View.CHAT);
+  };
 
   const handleStateChange = (
     model: ModelType,
@@ -105,23 +126,34 @@ const Panel: React.FC = () => {
     setMessages([{ sender: "user", text: message }, ...messages]);
   };
 
-  return (
-    <div className="App flex flex-col h-screen">
-      {isOptionsOpen ? (
-        <Options onGoBack={() => setIsOptionsOpen(false)} />
-      ) : (
+  let renderedView;
+  switch (currentView) {
+    case View.OPTIONS:
+      renderedView = <Options onGoBack={() => setCurrentView(View.CHAT)} />;
+      break;
+    case View.HISTORY:
+      renderedView = <History onGoBack={() => setCurrentView(View.CHAT)} />;
+      break;
+    case View.CHAT:
+    default:
+      renderedView = (
         <>
           <ChatHeader
             onClick={handleButtonClick}
             onStateChange={handleStateChange}
-            onOpenOptions={() => setIsOptionsOpen(true)}
-            onOpenHistory={() => alert("History")}
+            onOpenOptions={() => setCurrentView(View.OPTIONS)}
+            onOpenHistory={() => setCurrentView(View.HISTORY)}
           />
           <ChatWindow messages={messages} />
           {/* <ChatInput onSendMessage={handleSendMessage} /> */}
         </>
-      )}
-    </div>
+      );
+  }
+
+  return (
+    <CodeScribeContext.Provider value={{ messages, setMessages, showMainView }}>
+      <div className="App flex flex-col h-screen">{renderedView}</div>
+    </CodeScribeContext.Provider>
   );
 };
 
