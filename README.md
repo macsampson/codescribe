@@ -1,6 +1,6 @@
 <div align="center">
 <img src="public/icon-128.png" alt="logo"/>
-<h1> CodeScribe for Github<br/>Chrome Extension</h1>
+<h1><a src="https://chrome.google.com/webstore/detail/codescribe-for-github/dbjkcephefchomnpbnfnikceacaakkjj">CodeScribe for Github<br/>Chrome Extension</a></h1>
 
 </div>
 
