@@ -125,7 +125,11 @@ chrome.runtime.onConnect.addListener((port) => {
           // sendChunk(0);
 
           // Send the full description at once
-          port.postMessage({ text: cachedDescription });
+          port.postMessage({
+            text: cachedDescription,
+            sender: "CodeScribe (cached)",
+          });
+
           port.postMessage({ endOfData: true });
 
           return;

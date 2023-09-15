@@ -38,11 +38,15 @@ const History: React.FC<HistoryProps> = ({ onGoBack }) => {
         }
       }
       setIsModalOpen(false);
-      console.log("Filtered items cleared!");
+      console.log("History cleared!");
       // Fetch all remaining items in storage to update the state
-      chrome.storage.local.get(null, (updatedItems) => {
-        setStorageItems(updatedItems);
-      });
+      //   chrome.storage.local.get(null, (updatedItems) => {
+      //     setStorageItems(updatedItems);
+      //     setGroupedItems(groupByRepo(updatedItems));
+      //   });
+      setStorageItems({});
+      setGroupedItems({});
+      setMessages([]);
     });
   };
 
@@ -67,7 +71,7 @@ const History: React.FC<HistoryProps> = ({ onGoBack }) => {
 
       setStorageItems(filteredItems);
       setGroupedItems(groupByRepo(filteredItems));
-      console.log("history mounted");
+      //   console.log("history mounted");
     });
   }, []);
 
@@ -84,14 +88,17 @@ const History: React.FC<HistoryProps> = ({ onGoBack }) => {
         }
         console.log(value);
         acc[repoKey].push(value);
-        console.log("pushed");
+        // console.log("pushed");
       }
       return acc;
     }, {});
   };
 
   return (
-    <div id="history" className="flex flex-col text-gray-200">
+    <div
+      id="history"
+      className="flex flex-col text-gray-200 bg-gh-med-gray relative"
+    >
       <Header
         upperHeaderProps={{
           title: "History",
@@ -108,7 +115,6 @@ const History: React.FC<HistoryProps> = ({ onGoBack }) => {
                 <TrashIcon
                   className="h-5 w-5 text-red-500 hover:text-red-900"
                   title="Clear History"
-                  //   onClick={showModal}
                 />
               ),
               callback: showModal,
@@ -119,11 +125,16 @@ const History: React.FC<HistoryProps> = ({ onGoBack }) => {
       />
       <div
         id="history-items"
-        className="flex-1 p-2 overflow-y-auto p-2.5 break-words text-gray-200"
+        className="flex-1 p-2 overflow-y-auto break-words text-gray-200 font-mono mt-4"
       >
         {Object.entries(groupedItems).map(([repo, files]) => (
-          <div key={repo}>
-            <strong>{repo}</strong>
+          <div
+            key={repo}
+            className="mb-4 bg-gh-light-gray p-4 rounded-md shadow-lg"
+          >
+            <strong className="text-lg block border-b border-gray-700 pb-2 mb-2">
+              {repo}
+            </strong>
             <ul>
               {files.map((file, idx) => (
                 <li
@@ -131,7 +142,7 @@ const History: React.FC<HistoryProps> = ({ onGoBack }) => {
                   onClick={() => {
                     setMessages([
                       {
-                        sender: "CodeScribe Cached",
+                        sender: "CodeScribe (cached)",
                         text: file.description,
                         model: file.model,
                         detail: file.detail,
@@ -140,9 +151,9 @@ const History: React.FC<HistoryProps> = ({ onGoBack }) => {
                     ]);
                     showMainView();
                   }}
-                  className="cursor-pointer hover:text-gray-500 hover:underline hover:bg-gray-700"
+                  className="cursor-pointer bg-gh-button-color hover:bg-gh-button-hover hover:border-gh-button-hover-border active:bg-gh-button-active border-gh-button-border border-1 text-white rounded-md px-2 py-1 mb-1"
                 >
-                  {file.fileName}
+                  {`${file.fileName}  (${file.model} - ${file.detail})`}
                 </li>
               ))}
             </ul>
@@ -152,11 +163,10 @@ const History: React.FC<HistoryProps> = ({ onGoBack }) => {
       <Modal
         isOpen={isModalOpen}
         title="Confirm Deletion"
-        description="Are you sure you want to delete all the history? This action
-        cannot be undone."
-        callback={clearCodeDescriptionItems}
+        description="Are you sure you want to delete the history? This cannot be undone."
+        onConfirm={clearCodeDescriptionItems}
+        onClose={() => setIsModalOpen(false)}
       />
-      {/* </Transition> */}
     </div>
   );
 };

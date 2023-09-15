@@ -95,6 +95,8 @@ const Panel: React.FC = () => {
 
           port.onMessage.addListener((response) => {
             // console.log("response received from background");
+
+            // console.log("response", response);
             if (response.endOfData) {
               port.disconnect();
               return;
@@ -110,6 +112,9 @@ const Panel: React.FC = () => {
               let updatedMessages = [...prev];
               if (updatedMessages[0].sender === "CodeScribe") {
                 if (response.text) {
+                  if (response.sender) {
+                    updatedMessages[0].sender = response.sender;
+                  }
                   updatedMessages[0].text += response.text;
                 }
               }
