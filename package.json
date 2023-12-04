@@ -26,7 +26,7 @@
     "hast-util-to-jsx-runtime": "^2.1.1",
     "marked": "^7.0.5",
     "octokit": "^3.1.0",
-    "openai": "^4.3.1",
+    "openai": "^4.20.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-markdown": "^8.0.7",
